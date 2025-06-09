@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Timeline Cards</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5;
+        }
+        .debug-info { 
+            background: white; 
+            padding: 20px; 
+            margin: 10px 0; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Mobile view simulation styles */
+        #mobile-test-cards {
+            transition: width 0.3s ease;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"] {
+            min-width: 100%;
+            max-width: 100%;
+            height: 350px;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"] .milestone-card__image {
+            height: 40% !important;
+            transform: none !important;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"] .milestone-card__overlay {
+            height: 40% !important;
+            opacity: 0 !important; /* Make overlay invisible */
+            transform: none !important;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"] .milestone-card__content {
+            opacity: 1 !important;
+            top: 40% !important;
+            height: 60% !important;
+            border-top: 1px solid rgba(0, 113, 197, 0.15);
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"]:hover .milestone-card__image {
+            height: 40% !important;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"]:hover .milestone-card__overlay {
+            height: 40% !important;
+        }
+        
+        #mobile-test-cards .milestone-card[data-view="mobile"]:hover .milestone-card__content {
+            height: 60% !important;
+        }
+        .milestone-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            padding: 0;
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        .milestone-card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            transition: height 0.4s ease, transform 0.4s ease;
+        }
+        .milestone-card:hover .milestone-card__image {
+            height: 200px;
+            transform: scale(1.05);
+        }
+        .milestone-card__overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 113, 197, 0.85) 0%, rgba(0, 113, 197, 0.75) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            z-index: 2;
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .milestone-card:hover .milestone-card__overlay {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .milestone-card__content {
+            padding: 20px;
+            background-color: white;
+            position: absolute;
+            top: 200px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .milestone-card:hover .milestone-card__content {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Timeline Cards Debug</h1>
+    
+    <div class="debug-info">
+        <h3>Debug Information:</h3>
+        <div id="debug-output"></div>
+    </div>
+
+    <div class="debug-info">
+        <h3>Timeline Cards Test (Desktop):</h3>
+        <div id="test-cards"></div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Timeline Cards Test (Mobile View):</h3>
+        <p>Resize your window to less than 768px width to see mobile styling, or use the button below:</p>
+        <button id="toggle-mobile" style="padding: 8px 16px; background: #0071c5; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0;">Toggle Mobile View</button>
+        <div id="mobile-test-cards" style="max-width: 350px; margin: 0 auto;"></div>
+    </div>
+
+    <script>
+        // Copy the timeline data
+        const timelineData = [
+            {
+                year: '1968',
+                title: 'Intel Founded',
+                description: 'Robert Noyce and Gordon Moore rename NM Electronics to Intel Corporation, laying the foundation for decades of innovation.',
+                image: 'img/1.jpg',
+                tags: ['Innovation', 'Foundation', 'Technology']
+            },
+            {
+                year: '1971',
+                title: 'First Microprocessor',
+                description: 'Intel debuts the 4004—the world\'s first commercial microprocessor—igniting the revolution.',
+                image: 'img/2.jpg',
+                tags: ['Microprocessor', 'Innovation', 'Digital Revolution']
+            },
+            {
+                year: '1978',
+                title: '8086 Processor',
+                description: 'Launch of the 8086 processor, establishing the x86 architecture that powers countless PCs.',
+                image: 'img/3.jpg',
+                tags: ['Environment', 'Leadership', 'Manufacturing']
+            }
+        ];
+
+        function createMilestoneCard(milestone, index) {
+            const card = document.createElement('div');
+            card.className = 'milestone-card';
+            card.setAttribute('data-index', index);
+            
+            card.innerHTML = `
+                <img src="${milestone.image}" alt="${milestone.title}" class="milestone-card__image">
+                
+                <div class="milestone-card__overlay">
+                    <span class="milestone-card__year">${milestone.year}</span>
+                    <h3 class="milestone-card__title">${milestone.title}</h3>
+                </div>
+                
+                <div class="milestone-card__content">
+                    <span class="milestone-card__year">${milestone.year}</span>
+                    <h3 class="milestone-card__title">${milestone.title}</h3>
+                    <p>${milestone.description}</p>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugOutput = document.getElementById('debug-output');
+            const testCards = document.getElementById('test-cards');
+            const mobileTestCards = document.getElementById('mobile-test-cards');
+            const toggleMobileButton = document.getElementById('toggle-mobile');
+            
+            // Debug info
+            debugOutput.innerHTML = `
+                <p><strong>Timeline Data Length:</strong> ${timelineData.length}</p>
+                <p><strong>Current Time:</strong> ${new Date().toLocaleString()}</p>
+                <p><strong>Image Path Test:</strong> <img src="img/1.jpg" style="width: 50px; height: 50px;" onerror="this.style.border='2px solid red'; this.alt='❌ Image failed to load';" /></p>
+                <p><strong>Screen Width:</strong> <span id="screen-width">${window.innerWidth}px</span></p>
+            `;
+            
+            // Update screen width on resize
+            window.addEventListener('resize', function() {
+                document.getElementById('screen-width').textContent = `${window.innerWidth}px`;
+            });
+            
+            // Test card creation for desktop
+            console.log('Creating desktop test cards...');
+            timelineData.forEach((milestone, index) => {
+                console.log(`Creating desktop test card ${index + 1}: ${milestone.title}`);
+                const card = createMilestoneCard(milestone, index);
+                testCards.appendChild(card);
+            });
+            
+            // Test card creation for mobile view
+            console.log('Creating mobile test cards...');
+            timelineData.forEach((milestone, index) => {
+                console.log(`Creating mobile test card ${index + 1}: ${milestone.title}`);
+                const card = createMilestoneCard(milestone, index);
+                card.classList.add('timeline__mobile');
+                mobileTestCards.appendChild(card);
+            });
+            
+            // Toggle mobile view simulation
+            let mobileViewActive = false;
+            toggleMobileButton.addEventListener('click', function() {
+                mobileViewActive = !mobileViewActive;
+                mobileTestCards.style.width = mobileViewActive ? '350px' : '100%';
+                if (mobileViewActive) {
+                    document.body.style.setProperty('--screen-width', '767px');
+                    toggleMobileButton.textContent = 'Exit Mobile View';
+                    toggleMobileButton.style.backgroundColor = '#dc3545';
+                } else {
+                    document.body.style.removeProperty('--screen-width');
+                    toggleMobileButton.textContent = 'Toggle Mobile View';
+                    toggleMobileButton.style.backgroundColor = '#0071c5';
+                }
+                
+                // Apply or remove mobile classes
+                const mobileCards = mobileTestCards.querySelectorAll('.milestone-card');
+                mobileCards.forEach(card => {
+                    if (mobileViewActive) {
+                        card.setAttribute('data-view', 'mobile');
+                    } else {
+                        card.removeAttribute('data-view');
+                    }
+                });
+            });
+            
+            console.log('Test cards created!');
+        });
+    </script>
+</body>
+</html>

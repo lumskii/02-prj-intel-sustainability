@@ -1,140 +1,628 @@
-/* ===== Helpers ===== */
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
+// Intel Sustainability Timeline - JavaScript
+// This script handles all interactive functionality for the website
 
-/* ===== Footer year ===== */
-$('#foot-year').textContent = new Date().getFullYear();
-
-/* ===== Mobile-menu toggle ===== */
-const menuToggle = $('#menu-toggle');
-const mobileMenu = $('#mobile-menu');
-menuToggle.addEventListener('click', () => {
-  const open  = mobileMenu.style.display !== 'flex';
-  mobileMenu.style.display = open ? 'flex' : 'none';
-  menuToggle.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}"></i>`;
-  lucide.createIcons();
-});
-
-/* ===== Smooth-scroll hero → timeline ===== */
-$('#scroll-timeline').onclick = e => {
-  e.preventDefault();
-  $('#timeline').scrollIntoView({behavior:'smooth',block:'start'});
-};
-
-/* ===== Timeline data ===== */
-const data = [
-  { y:'1968', t:'Intel Founded', d:'Robert Noyce and Gordon Moore rename NM Electronics to Intel Corporation, laying the foundation for decades of innovation.', i:'leaf', img:'img/1.jpg' },
-  { y:'1971', t:'First Microprocessor', d:"Intel debuts the 4004—the world's first commercial microprocessor—igniting the revolution.", i:'sun', img:'img/2.jpg' },
-  { y:'1978', t:'8086 Processor', d:'Launch of the 8086 processor, establishing the x86 architecture that powers countless PCs.', i:'recycle', img:'img/3.jpg' },
-  { y:'1985', t:'386 Processor', d:'Intel introduces the 32-bit 386 processor, ushering in new performance and multitasking.', i:'factory', img:'img/4.jpg' },
-  { y:'2006', t:'Peak GHG Emissions', d:'Intel’s highest Scope 1+2 emissions; following years focus on abatement and renewables.', i:'wind', img:'https://images.unsplash.com/photo-1592664858534-4d54dd0c4c9f?auto=format&fit=crop&w=800&q=80' },
-  { y:'2020', t:'RISE Strategy', d:'Intel launches RISE 2030 goals for climate action, water stewardship, and waste reduction.', i:'trees', img:'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80' },
-  { y:'2022', t:'Net-Zero by 2040', d:'Intel commits to net-zero Scope 1+2 emissions across global operations by 2040.', i:'droplet', img:'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=800&q=80' },
-  { y:'2023', t:'99 % Renewable Electricity', d:'Achieves 99 % renewable electricity worldwide, drastically lowering emissions.', i:'sun', img:'https://images.unsplash.com/photo-1592664858534-4d54dd0c4c9f?auto=format&fit=crop&w=800&q=80' },
-  { y:'2024', t:'Sustainability Summit', d:'First Intel Sustainability Summit unites suppliers, officials, and industry leaders.', i:'leaf', img:'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80' }
+// Timeline data with Intel's sustainability milestones (9 key milestones)
+const timelineData = [
+    {
+        year: '1968',
+        title: 'Intel Founded',
+        description: 'Robert Noyce and Gordon Moore rename NM Electronics to Intel Corporation, laying the foundation for decades of innovation.',
+        image: 'img/1.jpg',
+        tags: ['Innovation', 'Foundation', 'Technology']
+    },
+    {
+        year: '1971',
+        title: 'First Microprocessor',
+        description: 'Intel debuts the 4004—the world\'s first commercial microprocessor—igniting the revolution.',
+        image: 'img/2.jpg',
+        tags: ['Microprocessor', 'Innovation', 'Digital Revolution']
+    },
+    {
+        year: '1978',
+        title: '8086 Processor',
+        description: 'Launch of the 8086 processor, establishing the x86 architecture that powers countless PCs.',
+        image: 'img/3.jpg',
+        tags: ['Environment', 'Leadership', 'Manufacturing']
+    },
+    {
+        year: '1985',
+        title: '386 Processor',
+        description: 'Intel introduces the 32-bit 386 processor, ushering in new performance and multitasking.',
+        image: 'img/4.jpg',
+        tags: ['Green Building', 'Sustainable Design', 'Architecture']
+    },
+    {
+        year: '2006',
+        title: 'Peak GHG Emissions',
+        description: 'Intel\'s highest Scope 1+2 emissions; following years focus on abatement and renewables.',
+        image: 'img/peak.png',
+        tags: ['Carbon Neutral', 'Renewable Energy', 'Efficiency']
+    },
+    {
+        year: '2020',
+        title: 'RISE Strategy',
+        description: 'Intel launches RISE 2030 goals for climate action, water stewardship, and waste reduction.',
+        image: 'img/rise.png',
+        tags: ['Ethical Sourcing', 'Supply Chain', 'Social Responsibility']
+    },
+    {
+        year: '2022',
+        title: 'Net-Zero by 2040',
+        description: 'Intel commits to net-zero Scope 1+2 emissions across global operations by 2040.',
+        image: 'img/net-zero.png',
+        tags: ['Water Conservation', 'Restoration', 'Neutrality']
+    },
+    {
+        year: '2023',
+        title: '99 % Renewable Electricity',
+        description: 'Achieves 99 % renewable electricity worldwide, drastically lowering emissions.',
+        image: 'img/electric.png',
+        tags: ['Goals 2030', 'Water Impact', 'Zero Waste']
+    },
+    {
+        year: '2024',
+        title: 'Sustainability Summit',
+        description: 'First Intel Sustainability Summit unites suppliers, officials, and industry leaders.',
+        image: 'img/summit.png',
+        tags: ['Climate Action', 'Net Zero', 'Global Operations']
+    }
 ];
 
-/* ===== Build MOBILE carousel ===== */
-const carouselInner = $('#carousel-inner');
-const dotsWrap      = $('#indicator-dots');
+// Current timeline position for mobile
+let currentTimelineIndex = 0;
 
-data.forEach((o, idx) => {
-  /* slide */
-  const slide = document.createElement('div');
-  slide.className = 'carousel-item';
-  slide.dataset.index = idx;
-  slide.innerHTML = `
-    <div class="card">
-      <div class="card__img">
-        <img src="${o.img}" alt="${o.y}" />
-        <div class="card__year">${o.y}</div>
-      </div>
-      <div class="card__body">
-        <div class="card__icon"><i data-lucide="${o.i}"></i></div>
-        <h3 class="card__title">${o.t}</h3>
-        <p class="card__desc">${o.d}</p>
-      </div>
-    </div>`;
-  carouselInner.appendChild(slide);
-
-  /* dot */
-  const dot = document.createElement('button');
-  dot.className = 'dot';
-  dot.dataset.index = idx;
-  dotsWrap.appendChild(dot);
+// Wait for the page to fully load before running scripts
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all website functionality
+    initializeMobileNavigation();
+    initializeTimeline();
+    initializeLucideIcons();
+    setCurrentYear();
+    
+    console.log('Intel Sustainability Timeline initialized successfully!');
 });
 
-/* ===== Build DESKTOP rows ===== */
-const rowsWrap = $('#timeline-desktop');
-data.forEach((o, idx) => {
-  const row = document.createElement('div');
-  row.className = `row${idx%2 ? ' reverse':''}`;
-  row.innerHTML = `
-    <div class="row__spacer"></div>
-    <div class="row__connector">
-      <div class="dot-lg"><div class="dot-lg__inner"></div></div>
-    </div>
-    <div class="row__content" data-row="${idx}">
-      <div class="row__meta">
-        <div class="card__icon"><i data-lucide="${o.i}"></i></div>
-        <span class="row__year">${o.y}</span>
-      </div>
-      <h3 class="row__title">${o.t}</h3>
-      <p class="row__desc">${o.d}</p>
-      <div class="row__imgWrap"><img src="${o.img}" alt="${o.y}"></div>
-    </div>`;
-  rowsWrap.appendChild(row);
-});
-
-/* ===== Carousel behaviour ===== */
-const carousel = $('#carousel');
-const slides   = $$('.carousel-item');
-const dots     = $$('.dot');
-const prevBtn  = $('#prev-btn');
-const nextBtn  = $('#next-btn');
-
-let active = 0;
-function updateArrows(){
-  prevBtn.disabled = active === 0;
-  nextBtn.disabled = active === slides.length-1;
+// ========== MOBILE NAVIGATION ========== //
+function initializeMobileNavigation() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    // Check if elements exist before adding event listeners
+    if (menuToggle && mobileMenu) {
+        // Toggle mobile menu when hamburger button is clicked
+        menuToggle.addEventListener('click', function() {
+            // Toggle the active class to show/hide menu
+            mobileMenu.classList.toggle('nav__mobile--active');
+            
+            // Change hamburger icon to X when menu is open
+            const icon = menuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('nav__mobile--active')) {
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            
+            // Refresh Lucide icons to show the change
+            lucide.createIcons();
+        });
+        
+        // Close mobile menu when a link is clicked
+        const mobileLinks = mobileMenu.querySelectorAll('.nav__mobile-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('nav__mobile--active');
+                const icon = menuToggle.querySelector('i');
+                icon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            });
+        });
+    }
 }
-function setActive(i, smooth=true){
-  active = i;
-  carousel.scrollTo({left:carousel.clientWidth*active,behavior:smooth?'smooth':'auto'});
-  dots.forEach((d,ix)=>d.classList.toggle('dot--active',ix===active));
-  $('#progress-text').innerHTML = `<span class="accent">${active+1}</span> of ${slides.length}`;
-  slides.forEach((s,ix)=>{
-    s.style.transform = `perspective(1000px) rotateY(${(ix-active)*30}deg) translateZ(${Math.abs(ix-active)?-150:0}px)`;
-    s.style.opacity   = ix===active?1:0.6;
-    s.style.zIndex    = slides.length-Math.abs(ix-active);
-  });
-  updateArrows();
+
+// ========== TIMELINE FUNCTIONALITY ========== //
+function initializeTimeline() {
+    createTimelineCards();
+    setupTimelineNavigation();
+    setupMobileTimelineNavigation();
+    initializeScrollSnapObserver();
+    
+    // Update mobile timeline display
+    updateMobileTimeline();
 }
-setActive(0,false);
 
-/* scroll-sync */
-carousel.addEventListener('scroll',()=>{
-  const i = Math.round(carousel.scrollLeft / carousel.clientWidth);
-  if(i!==active) setActive(i,false);
+// Create timeline cards for both desktop and mobile
+function createTimelineCards() {
+    const desktopTrack = document.getElementById('timeline-track');
+    const mobileCards = document.getElementById('mobile-cards');
+    
+    if (desktopTrack && mobileCards) {
+        // Clear existing content
+        desktopTrack.innerHTML = '';
+        mobileCards.innerHTML = '';
+        
+        // Create cards for each timeline milestone
+        timelineData.forEach((milestone, index) => {
+            // Create desktop card
+            const desktopCard = createMilestoneCard(milestone, index);
+            desktopTrack.appendChild(desktopCard);
+            
+            // Create mobile card (show all cards for vertical scrolling)
+            const mobileCard = createMilestoneCard(milestone, index);
+            mobileCard.classList.add('mobile-timeline-card');
+            mobileCards.appendChild(mobileCard);
+        });
+        
+        // Create navigation dots for mobile (now used for scroll-to functionality)
+        createTimelineDots();
+        
+        // Initialize mobile vertical scroll observer
+        initializeMobileScrollObserver();
+    }
+}
+
+// Create individual milestone card
+function createMilestoneCard(milestone, index) {
+    // Create main card container
+    const card = document.createElement('div');
+    card.className = 'milestone-card';
+    card.setAttribute('data-index', index);
+    
+    // Add hover effect for desktop cards
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px)';
+        this.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+    });
+    
+    // Build card HTML structure with initial blue overlay
+    card.innerHTML = `
+        <img src="${milestone.image}" alt="${milestone.title}" class="milestone-card__image">
+        
+        <!-- Blue overlay that appears over the image initially -->
+        <div class="milestone-card__overlay">
+            <span class="milestone-card__year">${milestone.year}</span>
+            <h3 class="milestone-card__title">${milestone.title}</h3>
+        </div>
+        
+        <!-- Content area that appears on hover with white background -->
+        <div class="milestone-card__content">
+            <span class="milestone-card__year">${milestone.year}</span>
+            <h3 class="milestone-card__title">${milestone.title}</h3>
+            <p class="milestone-card__description">${milestone.description}</p>
+            <div class="milestone-card__tags">
+                ${milestone.tags.map(tag => `<span class="milestone-card__tag">${tag}</span>`).join('')}
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Create navigation dots for mobile timeline
+function createTimelineDots() {
+    const dotsContainer = document.getElementById('timeline-dots');
+    
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        
+        // Create one dot for each timeline item
+        timelineData.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'timeline__dot';
+            
+            // Add click event to scroll to specific timeline item in mobile
+            dot.addEventListener('click', function() {
+                scrollToMobileCard(index);
+            });
+            
+            dotsContainer.appendChild(dot);
+        });
+    }
+}
+
+// Scroll to specific card in mobile vertical timeline
+function scrollToMobileCard(index) {
+    const mobileCards = document.getElementById('mobile-cards');
+    if (mobileCards) {
+        const cards = mobileCards.querySelectorAll('.milestone-card');
+        if (cards[index]) {
+            cards[index].scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+}
+
+// Setup desktop timeline navigation (horizontal scroll)
+function setupTimelineNavigation() {
+    const track = document.getElementById('timeline-track');
+    const prevBtn = document.getElementById('timeline-prev');
+    const nextBtn = document.getElementById('timeline-next');
+    
+    if (track && prevBtn && nextBtn) {
+        let currentIndex = 0;
+        const cardWidth = 380; // Card width + gap
+        
+        // Create progress indicator elements
+        createProgressIndicator();
+        
+        // Scroll left when previous button is clicked
+        prevBtn.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                scrollToCard(currentIndex);
+            }
+        });
+        
+        // Scroll right when next button is clicked
+        nextBtn.addEventListener('click', function() {
+            if (currentIndex < timelineData.length - 1) {
+                currentIndex++;
+                scrollToCard(currentIndex);
+            }
+        });
+        
+        // Function to scroll to specific card with smooth animation
+        function scrollToCard(index) {
+            const targetScroll = index * cardWidth;
+            track.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+            updateNavigationState(index);
+            updateProgressBar(index);
+        }
+        
+        // Update button states and progress
+        function updateNavigationState(index) {
+            // Update button states
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === timelineData.length - 1;
+            
+            // Update position indicator
+            const positionElement = document.getElementById('timeline-position');
+            if (positionElement) {
+                positionElement.textContent = `${index + 1} / ${timelineData.length}`;
+            }
+            
+            // Update visual feedback for current card
+            updateVisibleCard(index);
+        }
+        
+        // Listen to scroll events for manual scrolling
+        track.addEventListener('scroll', function() {
+            const scrollLeft = track.scrollLeft;
+            const newIndex = Math.round(scrollLeft / cardWidth);
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                updateNavigationState(currentIndex);
+                updateProgressBar(currentIndex);
+            }
+        });
+        
+        // Initialize navigation state
+        updateNavigationState(0);
+        updateProgressBar(0);
+        
+        // Keyboard navigation support
+        track.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                currentIndex--;
+                scrollToCard(currentIndex);
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight' && currentIndex < timelineData.length - 1) {
+                currentIndex++;
+                scrollToCard(currentIndex);
+                e.preventDefault();
+            }
+        });
+        
+        // Make timeline focusable for keyboard navigation
+        track.setAttribute('tabindex', '0');
+    }
+}
+
+// Setup mobile timeline navigation
+function setupMobileTimelineNavigation() {
+    // For vertical scroll, we don't need touch swipe navigation
+    // The native scroll behavior handles the vertical scrolling
+    // Keep minimal touch feedback for better UX
+    const mobileCards = document.getElementById('mobile-cards');
+    
+    if (mobileCards) {
+        // Add scroll event listener for better visual feedback
+        mobileCards.addEventListener('scroll', function() {
+            updateMobileScrollIndicators();
+        });
+        
+        // Smooth scroll behavior is handled by CSS
+        // Touch gestures work naturally with vertical scroll
+    }
+}
+
+// Initialize mobile scroll observer for visual feedback
+function initializeMobileScrollObserver() {
+    const mobileCards = document.getElementById('mobile-cards');
+    if (mobileCards && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                const index = parseInt(card.getAttribute('data-index'));
+                const dot = document.querySelectorAll('.timeline__dot')[index];
+                
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    // Add active state to dot when card is prominently visible
+                    if (dot) dot.classList.add('timeline__dot--active');
+                } else {
+                    // Remove active state when card is less visible
+                    if (dot) dot.classList.remove('timeline__dot--active');
+                }
+            });
+        }, {
+            root: mobileCards,
+            threshold: [0.3, 0.5, 0.7],
+            rootMargin: '-20px 0px'
+        });
+
+        // Observe all mobile timeline cards
+        const cards = mobileCards.querySelectorAll('.milestone-card');
+        cards.forEach(card => observer.observe(card));
+    }
+}
+
+// Update mobile scroll indicators (simplified for vertical scroll)
+function updateMobileScrollIndicators() {
+    // This function can be used for additional scroll-based feedback if needed
+    // Currently, the intersection observer handles the dot updates
+}
+
+// Update mobile timeline display (simplified for vertical scroll)
+function updateMobileTimeline() {
+    // For vertical scroll, all cards are visible
+    // This function is now mainly for backwards compatibility
+    // The intersection observer handles the visual feedback
+    
+    const dots = document.querySelectorAll('.timeline__dot');
+    
+    // Reset all dots (they'll be updated by intersection observer)
+    dots.forEach(dot => {
+        dot.classList.remove('timeline__dot--active');
+    });
+    
+    // The first card can be initially active
+    if (dots[0]) {
+        dots[0].classList.add('timeline__dot--active');
+    }
+}
+
+// ========== TIMELINE PROGRESS FUNCTIONS ========== //
+
+// Create progress indicator elements
+function createProgressIndicator() {
+    const controls = document.querySelector('.timeline__controls');
+    if (controls) {
+        // Check if progress elements already exist
+        if (!document.getElementById('timeline-position')) {
+            // Create position indicator
+            const positionElement = document.createElement('span');
+            positionElement.id = 'timeline-position';
+            positionElement.className = 'timeline__position';
+            positionElement.textContent = '1 / 9';
+            
+            // Create progress bar container
+            const progressBarContainer = document.createElement('div');
+            progressBarContainer.className = 'timeline__progress-bar';
+            
+            // Create progress fill element
+            const progressFill = document.createElement('div');
+            progressFill.id = 'timeline-progress-fill';
+            progressFill.className = 'timeline__progress-fill';
+            progressFill.style.width = '11.11%'; // Initial width for first item (1/9)
+            
+            progressBarContainer.appendChild(progressFill);
+            
+            // Insert elements in the controls
+            const nextBtn = document.getElementById('timeline-next');
+            if (nextBtn) {
+                controls.insertBefore(positionElement, nextBtn);
+                controls.insertBefore(progressBarContainer, nextBtn);
+            }
+        }
+    }
+}
+
+// Update progress bar based on current timeline position
+function updateProgressBar(index) {
+    const progressFill = document.getElementById('timeline-progress-fill');
+    if (progressFill) {
+        const percentage = ((index + 1) / timelineData.length) * 100;
+        progressFill.style.width = `${percentage}%`;
+    }
+}
+
+// Add visual feedback for currently visible card
+function updateVisibleCard(index) {
+    const track = document.getElementById('timeline-track');
+    if (track) {
+        const cards = track.querySelectorAll('.milestone-card');
+        cards.forEach((card, i) => {
+            if (i === index) {
+                card.classList.add('in-view');
+            } else {
+                card.classList.remove('in-view');
+            }
+        });
+    }
+}
+
+// Enhanced intersection observer for scroll snap feedback
+function initializeScrollSnapObserver() {
+    const track = document.getElementById('timeline-track');
+    if (track && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    // Add visual feedback for the card that's most in view
+                    const index = parseInt(card.getAttribute('data-index'));
+                    updateVisibleCard(index);
+                }
+            });
+        }, {
+            root: track,
+            threshold: [0.3, 0.5, 0.7],
+            rootMargin: '0px -20px'
+        });
+
+        // Observe all milestone cards
+        const cards = track.querySelectorAll('.milestone-card');
+        cards.forEach(card => observer.observe(card));
+    }
+}
+
+// ========== UTILITY FUNCTIONS ========== //
+
+// Initialize Lucide icons
+function initializeLucideIcons() {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Set current year in footer
+function setCurrentYear() {
+    const yearElement = document.getElementById('current-year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+}
+
+// Smooth scroll to section
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        // Calculate offset for fixed navbar
+        const navbarHeight = document.querySelector('.nav').offsetHeight;
+        const sectionTop = section.offsetTop - navbarHeight - 20;
+        
+        window.scrollTo({
+            top: sectionTop,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// ========== RESPONSIVE HELPERS ========== //
+// Handle window resize events
+window.addEventListener('resize', function() {
+    // Close mobile menu when switching to desktop
+    if (window.innerWidth > 768) {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuToggle = document.getElementById('menu-toggle');
+        
+        if (mobileMenu && menuToggle) {
+            mobileMenu.classList.remove('nav__mobile--active');
+            const icon = menuToggle.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            }
+        }
+    }
+    
+    // Reinitialize mobile scroll observer when switching layouts
+    if (window.innerWidth <= 768) {
+        // Small delay to ensure layout has settled
+        setTimeout(() => {
+            initializeMobileScrollObserver();
+        }, 300);
+    }
 });
 
-/* arrows & dots */
-prevBtn.addEventListener('click',()=> active && setActive(active-1));
-nextBtn.addEventListener('click',()=> active<slides.length-1 && setActive(active+1));
-dotsWrap.addEventListener('click',e=>{
-  const b=e.target.closest('.dot');
-  if(b) setActive(+b.dataset.index);
+// ========== INTERSECTION OBSERVER (SCROLL ANIMATIONS) ========== //
+// Add scroll animations when elements come into view
+function initializeScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe timeline cards for scroll animations
+    const cards = document.querySelectorAll('.milestone-card');
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Observe goals for scroll animations
+    const goals = document.querySelectorAll('.goal');
+    goals.forEach(goal => {
+        goal.style.opacity = '0';
+        goal.style.transform = 'translateY(30px)';
+        goal.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(goal);
+    });
+}
+
+// Initialize scroll animations when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initializeScrollAnimations, 500); // Delay to ensure layout is ready
 });
 
-/* ===== Desktop row “persist-open” on click ===== */
-let activeRow = null;
-rowsWrap.addEventListener('click', e=>{
-  const content = e.target.closest('.row__content');
-  if(!content) return;
-  if(activeRow) activeRow.classList.remove('row__content--active');
-  content.classList.add('row__content--active');
-  activeRow = content;
+// ========== ACCESSIBILITY IMPROVEMENTS ========== //
+// Add keyboard navigation support
+document.addEventListener('keydown', function(e) {
+    // Navigate timeline with arrow keys when in mobile view
+    if (window.innerWidth <= 768) {
+        const mobileCards = document.getElementById('mobile-cards');
+        if (mobileCards && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+            e.preventDefault();
+            
+            // Get currently visible card index
+            const cards = mobileCards.querySelectorAll('.milestone-card');
+            let targetIndex = 0;
+            
+            // Find the first visible card
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const containerRect = mobileCards.getBoundingClientRect();
+                if (rect.top >= containerRect.top && rect.top < containerRect.bottom) {
+                    targetIndex = index;
+                }
+            });
+            
+            // Navigate up or down
+            if (e.key === 'ArrowUp' && targetIndex > 0) {
+                scrollToMobileCard(targetIndex - 1);
+            } else if (e.key === 'ArrowDown' && targetIndex < cards.length - 1) {
+                scrollToMobileCard(targetIndex + 1);
+            }
+        }
+    }
 });
 
-/* ===== Icons ===== */
-lucide.createIcons();
+// ========== ERROR HANDLING ========== //
+// Global error handler for graceful degradation
+window.addEventListener('error', function(e) {
+    console.warn('Intel Timeline: Non-critical error occurred:', e.message);
+    // Continue execution - don't break the user experience
+});
+
+// Log successful initialization
+console.log('Intel Sustainability Timeline JavaScript loaded successfully!');

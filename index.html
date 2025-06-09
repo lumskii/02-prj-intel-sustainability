@@ -1,158 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intel: Sustainability Through the Ages</title>
-
-  <!-- Tailwind via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Custom styles -->
-  <link rel="stylesheet" href="style.css" />
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="nav">
+        <div class="nav__container">
+            <div class="nav__brand">
+                <img src="img/intel-header-logo.svg" alt="Intel Logo" class="nav__logo">
+            </div>
+            
+            <!-- Mobile menu button -->
+            <button class="nav__toggle" id="menu-toggle" aria-label="Toggle menu">
+                <i data-lucide="menu"></i>
+            </button>
+            
+            <!-- Desktop navigation links -->
+            <ul class="nav__links" id="desktop-links">
+                <li><a class="nav__link" href="#home">Home</a></li>
+                <li><a class="nav__link" href="#timeline">Timeline</a></li>
+                <li><a class="nav__link" href="#goals">Goals</a></li>
+                <li><a class="nav__link" href="#initiatives">Initiatives</a></li>
+                <li><a class="btn btn--primary" href="#contact">Get Involved</a></li>
+            </ul>
+        </div>
+        
+        <!-- Mobile navigation menu -->
+        <ul class="nav__mobile" id="mobile-menu">
+            <li><a class="nav__mobile-link" href="#home">Home</a></li>
+            <li><a class="nav__mobile-link" href="#timeline">Timeline</a></li>
+            <li><a class="nav__mobile-link" href="#goals">Goals</a></li>
+            <li><a class="nav__mobile-link" href="#initiatives">Initiatives</a></li>
+            <li><a class="btn btn--primary nav__mobile-link" href="#contact">Get Involved</a></li>
+        </ul>
+    </nav>
 
-<!-- ░░ Navbar ░░ -->
-<nav class="nav">
-  <div class="nav__container">
-    <div class="nav__brand">
-      <!-- Intel logo SVG for the header -->
-      <span class="nav__brand--primary">Intel</span>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero__background"></div>
+        <div class="hero__overlay"></div>
+        <div class="hero__content">
+            <div class="hero__logo">
+                <img src="img/intel-header-logo.svg" alt="Intel Logo">
+            </div>
+            <h1 class="hero__title">
+                Sustainability Through <span class="hero__accent">the Ages</span>
+            </h1>
+            <p class="hero__subtitle">
+                Explore Intel's journey through time, discovering how our commitment
+                to innovation has shaped a more sustainable future for technology and
+                our planet.
+            </p>
+            <div class="hero__actions">
+                <button class="btn btn--primary" onclick="scrollToSection('timeline')">
+                    Explore Our Timeline
+                </button>
+                <button class="btn btn--outline" onclick="scrollToSection('timeline')">
+                    <i data-lucide="arrow-down"></i>
+                    View Timeline
+                </button>
+            </div>
+        </div>
+        
+        <!-- Intel Sustainability Goals -->
+        <div class="hero__goals" id="goals">
+            <div class="goal">
+                <div class="goal__icon">
+                    <i data-lucide="leaf"></i>
+                </div>
+                <div class="goal__content">
+                    <h3>Net Zero Emissions</h3>
+                    <p>By 2040</p>
+                </div>
+            </div>
+            <div class="goal">
+                <div class="goal__icon">
+                    <i data-lucide="droplets"></i>
+                </div>
+                <div class="goal__content">
+                    <h3>Positive Water Impact</h3>
+                    <p>By 2030</p>
+                </div>
+            </div>
+            <div class="goal">
+                <div class="goal__icon">
+                    <i data-lucide="recycle"></i>
+                </div>
+                <div class="goal__content">
+                    <h3>Zero Waste to Landfill</h3>
+                    <p>By 2030</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <button class="nav__toggle" id="menu-toggle" aria-label="open menu">
-      <i data-lucide="menu"></i>
-    </button>
+    <!-- Timeline Section -->
+    <section class="timeline" id="timeline">
+        <header class="timeline__header">
+            <h2 class="timeline__title">Intel's Sustainability Journey</h2>
+            <p class="timeline__intro">
+                From our founding to today's sustainability leadership, explore the key
+                moments that shaped Intel's commitment to innovation and environmental
+                stewardship.
+            </p>
+        </header>
 
-    <ul class="nav__links" id="desktop-links">
-      <li><a class="nav__link" href="#">Home</a></li>
-      <li><a class="nav__link" href="#">Goals</a></li>
-      <li><a class="nav__link" href="#">Initiatives</a></li>
-      <li><a class="nav__link" href="#">Reports</a></li>
-      <li><a class="btn btn--primary" href="#">Get Involved</a></li>
-    </ul>
-  </div>
+        <!-- Desktop Timeline (Horizontal Scroll) -->
+        <div class="timeline__desktop">
+            <div class="timeline__track" id="timeline-track">
+                <!-- Milestone cards will be inserted here by JavaScript -->
+            </div>
+            <div class="timeline__controls">
+                <button class="timeline__btn timeline__btn--prev" id="timeline-prev">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button class="timeline__btn timeline__btn--next" id="timeline-next">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </div>
 
-  <ul class="nav__mobile" id="mobile-menu">
-    <li><a class="nav__mobile-link" href="#">Home</a></li>
-    <li><a class="nav__mobile-link" href="#">Goals</a></li>
-    <li><a class="nav__mobile-link" href="#">Initiatives</a></li>
-    <li><a class="nav__mobile-link" href="#">Reports</a></li>
-    <li><a class="btn btn--primary nav__mobile-link" href="#">Get Involved</a></li>
-  </ul>
-</nav>
+        <!-- Mobile Timeline (Vertical Stack) -->
+        <div class="timeline__mobile">
+            <div class="timeline__cards" id="mobile-cards">
+                <!-- Milestone cards will be inserted here by JavaScript -->
+            </div>
+            <div class="timeline__progress">
+                <div class="timeline__dots" id="timeline-dots"></div>
+                <div class="timeline__counter" id="timeline-counter">1 / 9</div>
+            </div>
+        </div>
 
-<!-- ░░ Hero ░░ -->
-<section class="hero">
-  <div class="hero__overlay"></div>
-  <div class="hero__content">
-    <h1 class="hero__title">
-      Sustainability Through <span class="accent">the Ages</span>
-    </h1>
-    <p class="hero__subtitle">
-      Explore Intel’s journey through time, discovering how our commitment
-      to innovation has shaped a more sustainable future for technology and
-      our planet.
-    </p>
-    <div class="hero__actions">
-      <button class="btn">Explore Our History</button>
-      <button class="btn btn--outline" id="scroll-timeline">View Timeline</button>
-    </div>
-  </div>
-</section>
+        <div class="timeline__cta">
+            <button class="btn btn--primary">Learn More About Our Initiatives</button>
+        </div>
+    </section>
 
-<!-- ░░ Timeline ░░ -->
-<section class="timeline" id="timeline">
-  <header class="timeline__header">
-    <h2 class="timeline__title">Intel’s Historical Timeline</h2>
-    <p class="timeline__intro">
-      From our founding to today’s sustainability leadership, explore the key
-      moments that shaped Intel’s commitment to innovation and environmental
-      stewardship.
-    </p>
-  </header>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__col footer__brand">
+                <div class="footer__logo">
+                    <span class="nav__brand--primary">Intel</span>
+                </div>
+                <p>
+                    Creating world-changing technology that improves the life of every
+                    person on the planet while minimizing our environmental impact.
+                </p>
+                <div class="footer__social">
+                    <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+                    <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                </div>
+            </div>
 
-  <!-- mobile carousel -->
-  <div class="carousel--mobile">
-    <button class="carousel__btn" id="prev-btn" aria-label="previous">
-      <i data-lucide="chevron-left"></i>
-    </button>
-    <button class="carousel__btn" id="next-btn" aria-label="next">
-      <i data-lucide="chevron-right"></i>
-    </button>
+            <div class="footer__col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Sustainability Report</a></li>
+                    <li><a href="#">Environmental Goals</a></li>
+                    <li><a href="#">Social Impact</a></li>
+                    <li><a href="#">Corporate Governance</a></li>
+                    <li><a href="#">Supply Chain</a></li>
+                </ul>
+            </div>
 
-    <div class="carousel" id="carousel">
-      <div class="carousel__inner" id="carousel-inner"></div>
-    </div>
+            <div class="footer__col">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Press Releases</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Whitepapers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Events</a></li>
+                </ul>
+            </div>
 
-    <div class="carousel__dots" id="indicator-dots"></div>
-    <div class="carousel__progress" id="progress-text"></div>
-  </div>
+            <div class="footer__col">
+                <h3>Contact Us</h3>
+                <div class="footer__contact">
+                    <p><i data-lucide="map-pin"></i> Santa Clara, CA</p>
+                    <p><i data-lucide="phone"></i> (408) 765-8080</p>
+                    <p><i data-lucide="mail"></i> sustainability@intel.com</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer__bottom">
+            <p>&copy; <span id="current-year"></span> Intel Corporation. All rights reserved.</p>
+        </div>
+    </footer>
 
-  <!-- desktop rows -->
-  <div class="timeline__rows" id="timeline-desktop"></div>
-
-  <div class="timeline__cta">
-    <button class="btn btn--primary">Learn More About Our Initiatives</button>
-  </div>
-</section>
-
-<!-- ░░ Footer ░░ -->
-<footer class="footer">
-  <div class="footer__container">
-    <div class="footer__col footer__brand">
-      <div><span class="nav__brand--primary">Intel</span><span class="nav__brand--secondary">Sustainability</span></div>
-      <p>
-        Creating world-changing technology that improves the life of every
-        person on the planet while minimizing our environmental impact.
-      </p>
-      <div class="footer__social">
-        <a data-lucide="twitter"  href="#"></a>
-        <a data-lucide="facebook" href="#"></a>
-        <a data-lucide="instagram" href="#"></a>
-        <a data-lucide="linkedin" href="#"></a>
-        <a data-lucide="youtube"  href="#"></a>
-      </div>
-    </div>
-
-    <div class="footer__col">
-      <h3>Quick Links</h3>
-      <ul>
-        <li><a href="#">Sustainability Report</a></li>
-        <li><a href="#">Environmental Goals</a></li>
-        <li><a href="#">Social Impact</a></li>
-        <li><a href="#">Corporate Governance</a></li>
-        <li><a href="#">Supply Chain Responsibility</a></li>
-      </ul>
-    </div>
-
-    <div class="footer__col">
-      <h3>Resources</h3>
-      <ul>
-        <li><a href="#">Press Releases</a></li>
-        <li><a href="#">Case Studies</a></li>
-        <li><a href="#">Whitepapers</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Events</a></li>
-      </ul>
-    </div>
-
-    <div class="footer__col">
-      <h3>Contact Us</h3>
-      <p><i data-lucide="map-pin"></i> 2200 Mission College Blvd, Santa Clara CA</p>
-      <p><i data-lucide="phone"></i> (408) 765-8080</p>
-      <p><i data-lucide="mail"></i> sustainability@intel.com</p>
-    </div>
-  </div>
-  <div class="footer__bottom">
-    © <span id="foot-year"></span> Intel Corporation. All rights reserved.
-  </div>
-</footer>
-
-<script src="script.js"></script>
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
